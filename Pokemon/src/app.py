@@ -1,15 +1,30 @@
 
 from flask import Flask
+from flask import render_template,session
+import flask_login
+import pyodbc
+import requests
+import json
 
 app = Flask(__name__)
 
-@app.route('/assignment5')
-def assignment5():
-     return "This is for assignment 5 in CS 3203"
+#create login manager for Flask
+app.secret_key = 'curlyunicorn632'
+login_manager = flask_login.LoginManager()
+login_manager.init_app(app)
 
-@app.route('/about')
-def about():
-     return "Thomas Scrivner, 11/2/2023"
+
+
+
+
+#home page, will show the list of pokemon 
+@app.route('/')
+@app.route('/home')
+def home():
+     return
+          
+
+
 
 
 if __name__ == '__main__':
