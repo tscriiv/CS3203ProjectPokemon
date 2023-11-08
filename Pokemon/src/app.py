@@ -6,6 +6,16 @@ import pyodbc
 import requests
 import json
 
+##SQL connection 
+
+server = "tcp:s30.winhost.com"
+db = "DB_128040_scri0004"
+user = "DB_128040_scri0004_user"
+password = "Thomas113366806"
+
+conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};port=1433;SERVER='+ server + ';DATABASE=' + db +';UID=' + user + ';PWD=' + password + ';encrypt=no')
+
+
 app = Flask(__name__)
 
 #create login manager for Flask
@@ -21,7 +31,15 @@ login_manager.init_app(app)
 @app.route('/')
 @app.route('/home')
 def home():
-     return
+     ##testing SQL Connection
+     cursor = conn.cursor()
+     results = cursor.execute('SELECT * FROM Car').fetchall()
+     for row in results:
+          print(row[1])
+     cursor.close()
+     return "1"
+     
+     
           
 
 
