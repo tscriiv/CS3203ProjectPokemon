@@ -7,7 +7,7 @@ services:
         dockerfile: Dockerfile
       container_name: test1
       ports:
-        - 5020:5000
+        - 5020:5020
       networks:
         - network 
 networks:

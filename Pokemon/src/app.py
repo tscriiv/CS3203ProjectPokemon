@@ -111,7 +111,7 @@ def home():
      }
 
      
-     return render_template('home.html',**context)
+     return render_template('templates/home.html',**context)
      
      
           

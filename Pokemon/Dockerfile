@@ -40,6 +40,8 @@ RUN pip install pyodbc
 
 COPY src/app.py ./
 
+COPY src/templates/ /templates/
+
 
 EXPOSE 5000
 
