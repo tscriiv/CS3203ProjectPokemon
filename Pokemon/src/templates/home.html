@@ -11,7 +11,7 @@
     <div class="row">
       {% for pokemon in pokemonList %}
       <div class="col-sm-3">
-        <div class="card" style="width: 20rem; padding: 10px; background-color: #FFD700; height: 270px; margin: 10px;">
+        <div class="card" style="width: 20rem; padding: 10px; background-color: #FFD700; height: 320px; margin: 10px;">
           <div style="background-color: {{bgColors[pokemon.types[0].type.name]}}; height: 100%;">
             <table class="table table-striped card-body">
               <thead>
@@ -30,8 +30,8 @@
                 </tr>
                 <tr>
                   <td colspan="6" style="text-align: center;"><img
-                      src={{pokemon.sprites.other["official-artwork"].front_default}} alt="No Image Found" width="60"
-                      height="60"></td>
+                      src={{pokemon.sprites.other["official-artwork"].front_default}} alt="No Image Found" width="110"
+                      height="110"></td>
                 </tr>
                 <tr>
                   <td><strong>HP</strong><br>{{pokemon.stats[0].base_stat}}</td>
