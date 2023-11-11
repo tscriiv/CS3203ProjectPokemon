@@ -2,7 +2,7 @@
 from flask import Flask
 from flask import render_template,session
 import flask_login
-import pyodbc
+#import pyodbc
 import requests
 import json
 from json import JSONDecoder
@@ -14,7 +14,7 @@ db = "DB_128040_scri0004"
 user = "DB_128040_scri0004_user"
 password = "Thomas113366806"
 
-conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};port=1433;SERVER='+ server + ';DATABASE=' + db +';UID=' + user + ';PWD=' + password + ';encrypt=no')
+#conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};port=1433;SERVER='+ server + ';DATABASE=' + db +';UID=' + user + ';PWD=' + password + ';encrypt=no')
 
 #PokemonList Class (retrieves all pokemon and lists them in table)
 class PokemonList:
@@ -27,11 +27,12 @@ class PokemonListEncoder(JSONDecoder):
 
 #Pokemon Class (individual class for each pokemon)
 class Pokemon:
-     def __init__(self,name,url,height,weight):
+     def __init__(self,name,url,height,weight,types):
           self.name = name
           self.url = url
           self.height = height
           self.weight = weight
+          self.types = types
 
 class PokemonEncoder(JSONDecoder):
      def default(self,o):
@@ -91,6 +92,25 @@ def home():
      #      print(row[1])
      # cursor.close()
 
+     backgroundColors = {}
+     backgroundColors["grass"] = "#AFE1AF"
+     backgroundColors["poison"] = "#B24BF3"
+     backgroundColors["fire"] = "#FF7500"
+     backgroundColors["flying"] = "#C5C5C5"
+     backgroundColors["dragon"] = "#FFC270"
+     backgroundColors["water"] = "#5DD6F4"
+     backgroundColors["bug"] = "#50C878"
+     backgroundColors["normal"] = "#C5C5C5"
+     #backgroundColors["dark"] = "#"
+     backgroundColors["electric"] = "#FFD700"
+     backgroundColors["psychic"] = "#9370DB"
+     backgroundColors["ground"] = "#FF8C00"
+     backgroundColors["ice"] = "#7DF9FF"
+     backgroundColors["steel"] = "#A9A9A9"
+     backgroundColors["fairy"] = "#FF69B4"
+     backgroundColors["fighting"] = "#ff8c00"
+     backgroundColors["rock"] = "#E89020"
+     backgroundColors["ghost"] = "#8A2BE2"
 
      #get list of pokemon names (limit to 250)
      url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=100'
@@ -101,8 +121,8 @@ def home():
      for r in req['results']:
           url2 = 'https://pokeapi.co/api/v2/pokemon/' + r['name']
           req2 = requests.get(url2).json()
-          pokemonNew = Pokemon(r['name'],req2['sprites']['front_default'],req2['weight'],None)
-          pokemonList.append(pokemonNew)
+          #pokemonNew = Pokemon(r['name'],req2['sprites']['front_default'], req2['height'], req2['weight'],req2['types'])
+          pokemonList.append(req2)
      
      
      context = {
@@ -111,7 +131,7 @@ def home():
      }
 
      
-     return render_template('templates/home.html',**context)
+     return render_template('home.html',**context, bgColors=backgroundColors)
      
      
           
