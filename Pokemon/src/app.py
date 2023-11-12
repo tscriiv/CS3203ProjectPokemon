@@ -107,7 +107,7 @@ def home():
      backgroundColors["water"] = "#5DD6F4"
      backgroundColors["bug"] = "#50C878"
      backgroundColors["normal"] = "#C5C5C5"
-     #backgroundColors["dark"] = "#"
+     backgroundColors["dark"] = "#708090"
      backgroundColors["electric"] = "#FFD700"
      backgroundColors["psychic"] = "#9370DB"
      backgroundColors["ground"] = "#FF8C00"

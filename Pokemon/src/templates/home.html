@@ -22,8 +22,8 @@
                   <td colspan="3" style="text-align: right;">
                     {% for t in pokemon.types: %}
                     {% if t.type.name in bgColors.keys(): %}
-                    <img src="{{url_for('static', filename=t.type.name + '.png')}}" width="20" height="20" alt="{{t.type.name}}"
-                      title="{{t.type.name}}">
+                    <img src="{{url_for('static', filename=t.type.name + '.png')}}" width="20" height="20"  alt="{{t.type.name}} "
+                    title= "{{t.type.name.capitalize()}}">
                     {% endif %}
                     {% endfor %}
                   </td>
@@ -43,7 +43,7 @@
                 </tr>
                 <td colspan="6" style="text-align: left;">
                   {% for a in pokemon.abilities %}
-                  {{a.ability.name}}<br>
+                  {{a.ability.name.capitalize()}}<br>
                   {% endfor %}</td>
                 </tr>
               </tbody>
