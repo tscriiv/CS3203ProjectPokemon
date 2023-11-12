@@ -1,6 +1,6 @@
 
 from flask import Flask
-from flask import render_template,session
+from flask import render_template, redirect, request, url_for
 import flask_login
 #import pyodbc
 import requests
@@ -77,9 +77,15 @@ def user_loader(username):
     user.id = username
     return user
 
-
-
-
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        if request.form['username'] != 'admin' or request.form['password'] != 'pokeDex':
+            error = 'Invalid Credentials. Please try again.'
+        else:
+            return redirect(url_for('home'))
+    return render_template('login.html', error=error)
 
 #home page, will show the list of pokemon 
 @app.route('/')
@@ -132,11 +138,6 @@ def home():
 
      
      return render_template('home.html',**context, bgColors=backgroundColors)
-     
-     
-          
-
-
 
 
 if __name__ == '__main__':
