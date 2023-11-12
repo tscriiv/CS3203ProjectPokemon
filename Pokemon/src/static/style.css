@@ -1,5 +1,10 @@
+body {
+    font-family: Marker Felt, fantasy;
+}
 .login-bg {
-    background-image: url('{{url_for('static', filename='pokedex1.gif')}}'); 
-    height: 100vh; 
-    background-repeat:no-repeat;
+
+    background-image: url('{{url_for(' static', filename=' pokedex1.gif')}}');
+    height: 100vh;
+    background-repeat: no-repeat;
+
 }

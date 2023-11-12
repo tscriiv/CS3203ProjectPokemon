@@ -7,15 +7,15 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='loader.css') }}">
   <title>Pokemon Login</title>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function(){
-        console.log("ready");
-        $("button").click(function(){
-          console.log("click");
-          $("#loader").toggle();
-        });
+  <script>
+    $(document).ready(function () {
+      console.log("ready");
+      $("button").click(function () {
+        console.log("click");
+        $("#loader").toggle();
       });
-    </script>
+    });
+  </script>
 </head>
 
 <body style="background-image: url('{{url_for('static', filename='background1.png')}}'); height: 100vh;">
@@ -38,8 +38,9 @@
     </div>
   </div>
   {% if error %}
-      <div class="error" style="position: absolute; top: 60%; left: 50%;transform: translate(-50%, -50%); color: white;"><strong>Error:</strong> {{ error }}</div>
-      {% endif %}
+  <div class="error" style="position: absolute; top: 60%; left: 50%;transform: translate(-50%, -50%); color: white;">
+    <strong>Error:</strong> {{ error }}</div>
+  {% endif %}
 </body>
 
 </html>
