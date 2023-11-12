@@ -2,7 +2,7 @@
 from flask import Flask
 from flask import render_template, redirect, request, url_for
 import flask_login
-#import pyodbc
+import pyodbc
 import requests
 import json
 from json import JSONDecoder
@@ -14,7 +14,7 @@ db = "DB_128040_scri0004"
 user = "DB_128040_scri0004_user"
 password = "Thomas113366806"
 
-#conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};port=1433;SERVER='+ server + ';DATABASE=' + db +';UID=' + user + ';PWD=' + password + ';encrypt=no')
+conn = pyodbc.connect('DRIVER={ODBC Driver 18 for SQL Server};port=1433;SERVER='+ server + ';DATABASE=' + db +';UID=' + user + ';PWD=' + password + ';encrypt=no')
 
 #PokemonList Class (retrieves all pokemon and lists them in table)
 class PokemonList:
@@ -79,13 +79,40 @@ def user_loader(username):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'GET':
+        return render_template('login.html')
     error = None
     if request.method == 'POST':
-        if request.form['username'] != 'admin' or request.form['password'] != 'pokeDex':
-            error = 'Invalid Credentials. Please try again.'
-        else:
-            return redirect(url_for('home'))
+        cursor = conn.cursor()
+        accounts = cursor.execute('Select * from Users').fetchall()
+        for row in accounts:
+             print(row[1],row[2])
+             if request.form['username'] == row[1]:
+                  if request.form['password'] != row[2]:
+                       error = 'The username or password is incorrect'
+                  else:
+                       user = User()
+                       user.id = request.form['username']
+                       flask_login.login_user(user)
+                       return redirect(url_for('home'))
+        error = 'The username or password is incorrect'
+
+     #    if request.form['username'] not in accounts[1]:
+     #         error = 'The username or password is incorrect or the account does not exist'
+     #    else:
+             
+     #         password = request.form['password']
+             
+                   
+             
+
+     #    if request.form['username'] != 'admin' or request.form['password'] != 'pokeDex':
+     #        error = 'The username or password is incorrect'
+     #    else:
+     #        return redirect(url_for('home'))
     return render_template('login.html', error=error)
+
+
 
 #home page, will show the list of pokemon 
 @app.route('/')
@@ -122,23 +149,23 @@ def home():
      url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=100'
      req = requests.get(url).json()
      
+     #for each pokemon name, fetch the info about them 
      pokemonList = []
      index = 1
      for r in req['results']:
           url2 = 'https://pokeapi.co/api/v2/pokemon/' + r['name']
           req2 = requests.get(url2).json()
-          #pokemonNew = Pokemon(r['name'],req2['sprites']['front_default'], req2['height'], req2['weight'],req2['types'])
           pokemonList.append(req2)
      
-     
+     #pass pokemon info to view
      context = {
           "pokemonList": pokemonList,
           "index" : index
      }
 
-     
+     #load home with cards for each roster
      return render_template('home.html',**context, bgColors=backgroundColors)
 
 
 if __name__ == '__main__':
-     app.run(host='0.0.0.0', port=5200, debug=True)
+     app.run(host='0.0.0.0', port=5000, debug=True)
