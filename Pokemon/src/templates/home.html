@@ -41,10 +41,14 @@
                   <td><strong>S.Def</strong><br>{{pokemon.stats[4].base_stat}}</td>
                   <td><strong>Spd</strong><br>{{pokemon.stats[5].base_stat}}</td>
                 </tr>
-                <td colspan="6" style="text-align: left;">
+                <td colspan="3" style="text-align: left;">
                   {% for a in pokemon.abilities %}
                   {{a.ability.name.title()}}<br>
                   {% endfor %}</td>
+                <td colspan="3" style="text-align: right;">
+                  Add to roster?
+                  <input type="checkbox" id="rostercheck" name="rostercheck" value="inroster">
+                </td>
                 </tr>
               </tbody>
             </table>
