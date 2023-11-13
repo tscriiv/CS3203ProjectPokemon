@@ -40,6 +40,7 @@ RUN pip install pyodbc
 
 COPY src/app.py ./
 
+COPY src/static /static
 COPY src/templates/ /templates/
 
 
