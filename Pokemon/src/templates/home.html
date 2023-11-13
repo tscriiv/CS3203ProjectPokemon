@@ -14,7 +14,67 @@
 
 <body>
   <div class="container">
+    <div>
+      <!-- Nav pills -->
+      <ul class="nav nav-pills">
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="pill" href="#all">All</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="pill" href="#roster">My Roster</a>
+        </li>
+      </ul>
 
+      <!-- Tab panes -->
+      <div class="tab-content">
+        <!-- Tab 2 -->
+        <div class="tab-pane container active" id="all">
+          <div class="row">
+            {% for pokemon in pokemonList %}
+            <div class="col-sm-3">
+              <div class="card"
+                style="width: 20rem; padding: 10px; background-color: #FFD700; height: 320px; margin: 10px;">
+                <div style="background-color: {{bgColors[pokemon.types[0].type.name]}}; height: 100%;">
+                  <table class="table table-striped card-body">
+                    <thead>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td colspan="3"><strong>{{pokemon.name.capitalize()}}</strong></td>
+                        <td colspan="3" style="text-align: right;">
+                          {% for t in pokemon.types: %}
+                          {% if t.type.name in bgColors.keys(): %}
+                          <img src="{{url_for('static', filename=t.type.name + '.png')}}" width="20" height="20"
+                            alt="{{t.type.name}} " title="{{t.type.name.capitalize()}}">
+                          {% endif %}
+                          {% endfor %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td colspan="6" style="text-align: center;"><img
+                            src={{pokemon.sprites.other["official-artwork"].front_default}} alt="No Image Found"
+                            width="110" height="110"></td>
+                      </tr>
+                      <tr>
+                        <td><strong>HP</strong><br>{{pokemon.stats[0].base_stat}}</td>
+                        <td><strong>Att</strong><br>{{pokemon.stats[1].base_stat}}</td>
+                        <td><strong>Def</strong><br>{{pokemon.stats[2].base_stat}}</td>
+                        <td><strong>S.Att</strong><br>{{pokemon.stats[3].base_stat}}</td>
+                        <td><strong>S.Def</strong><br>{{pokemon.stats[4].base_stat}}</td>
+                        <td><strong>Spd</strong><br>{{pokemon.stats[5].base_stat}}</td>
+                      </tr>
+                      <td colspan="6" style="text-align: left;">
+                        {% for a in pokemon.abilities %}
+                        {{a.ability.name.capitalize()}}<br>
+                        {% endfor %}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
           </div>
 
         </div>
