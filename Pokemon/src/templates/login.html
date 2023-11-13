@@ -3,27 +3,44 @@
 <head>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> 
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='loader.css') }}">
   <title>Pokemon Login</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      console.log("ready");
+      $("button").click(function () {
+        console.log("click");
+        $("#loader").toggle();
+      });
+    });
+  </script>
 </head>
 
-<body style="background-image: url('{{url_for('static', filename='background.png')}}'); height: 100vh;">
-    <div class="container" style="display: flex; align-items: center; justify-content: center;">
-        <div class="card" style="width: 48rem; padding: 10px; height: 620px; margin: 10px; background-color: transparent;">
-            <form action="" method="post"
-                style="background-image: url('{{url_for('static', filename='pokedex1.gif')}}'); height: 100vh; background-repeat:no-repeat; background-size: 450px; background-position: center; ">
-                <input type="text" placeholder="Username" name="username" value="{{
+<body style="background-image: url('{{url_for('static', filename='background1.png')}}'); height: 100vh;">
+  {% if error %}
+  <div class="error alert alert-danger" id="alert" role="alert">
+    <strong>Error:</strong> {{ error }}</div>
+  {% endif %}
+
+  <div class="container" style="display: flex; align-items: center; justify-content: center;">
+    <div class="card" style="width: 48rem; padding: 10px; height: 620px; margin: 10px; background-color: transparent;">
+      <form action="" method="post"
+        style="background-image: url('{{url_for('static', filename='pokedex1.gif')}}'); height: 100vh; background-repeat:no-repeat; background-size: 450px; background-position: center; ">
+        <input type="text" placeholder="Username" name="username" value="{{
           request.form.username }}" style="position: absolute; top: 240px; left: 200px; width: 140px;">
-                <input type="password" placeholder="Password" name="password" value="{{
+        <input type="password" placeholder="Password" name="password" value="{{
           request.form.password }}" style="position: absolute; top: 285px; left: 200px; width: 140px;">
-                <input class="btn btn-default" type="submit" value="Login"
-                style="position: absolute; top: 395px; left: 187px; width: 121px; height: 56px; font-weight: bold;">
-            </form>
-            {% if error %}
-            <div class="error" style="text-align: center; color: white;"><strong>Error:</strong> {{ error }}</div>
-                {% endif %}
-        </div>
+        <button class="btn btn-default" type="submit" value="Login"
+          style="position: absolute; top: 395px; left: 187px; width: 121px; height: 56px; font-weight: bold;">Login</button>
+      </form>
     </div>
+  </div>
+  <div class="wrapper" id="loader" style="display:none;">
+    <div class="pokeball">
+    </div>
+  </div>
 </body>
 
 </html>
