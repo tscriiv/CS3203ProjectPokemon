@@ -61,7 +61,7 @@
                 </tr>
                 <td colspan="6" style="text-align: left;">
                   {% for a in pokemon.abilities %}
-                  {{a.ability.name}}<br>
+                  {{a.ability.name.title()}}<br>
                   {% endfor %}</td>
                 </tr>
               </tbody>

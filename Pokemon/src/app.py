@@ -146,7 +146,7 @@ def home():
      backgroundColors["ghost"] = "#8A2BE2"
 
      #get list of pokemon names (limit to 250)
-     url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=100'
+     url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=151'
      req = requests.get(url).json()
      
      #for each pokemon name, fetch the info about them 
