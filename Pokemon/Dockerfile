@@ -39,7 +39,7 @@ RUN pip install pyodbc
 # RUN echo CipherString = DEFAULT@SECLEVEL=1 >> /etc/ssl/openssl.cnf
 
 COPY src/app.py ./
-
+COPY src/static/ /static/
 COPY src/templates/ /templates/
 
 
