@@ -1,6 +1,6 @@
 
 from flask import Flask
-from flask import render_template, redirect, request, url_for, jsonify
+from flask import render_template, redirect, request, url_for
 import flask_login
 import psycopg2
 import requests
@@ -14,7 +14,7 @@ from flask_login import login_user, UserMixin, login_required, logout_user, curr
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = 'pokeDex_admin'
-DB_PASSWORD = ''
+DB_PASSWORD = 'pokeDexv1.0'
 DB_NAME = 'poke_dex'
 
 def connect_to_db():
@@ -174,7 +174,7 @@ def home():
      backgroundColors["ghost"] = "#8A2BE2"
 
      #get list of pokemon names (limit to 250)
-     url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=100'
+     url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=151'
      req = requests.get(url).json()
      
      pokemonList = []
