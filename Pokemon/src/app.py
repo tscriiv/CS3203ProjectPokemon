@@ -11,7 +11,7 @@ from flask_login import login_user, UserMixin, login_required, logout_user, curr
 ##POSTGRESSQL connection
 # use 'localhost' when running within IDE
 # use 'pokemon-db-1' when running within Docker
-DB_HOST = 'pokemon-db-1'
+DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = 'pokeDex_admin'
 DB_PASSWORD = ''

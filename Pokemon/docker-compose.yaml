@@ -8,13 +8,13 @@ services:
     ports:
       - 5020:5000
     networks:
-      - network
+      - network-app
   db:
     build: ./db/
     ports:
       - 5432:5432
     networks:
-      - network
+      - network-app
 networks:
    network:
      driver: bridge

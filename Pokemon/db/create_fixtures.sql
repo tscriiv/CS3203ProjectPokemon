@@ -1,3 +1,4 @@
+--
 SELECT 'CREATE DATABASE poke_dex'
     WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'poke_dex');
 
