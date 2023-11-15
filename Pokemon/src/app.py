@@ -86,7 +86,6 @@ def login():
         cursor = conn.cursor()
         accounts = cursor.execute('Select * from Users').fetchall()
         for row in accounts:
-             print(row[1],row[2])
              if request.form['username'] == row[1]:
                   if request.form['password'] != row[2]:
                        error = 'The username or password is incorrect'
@@ -97,19 +96,12 @@ def login():
                        return redirect(url_for('home'))
         error = 'The username or password is incorrect'
 
-     #    if request.form['username'] not in accounts[1]:
-     #         error = 'The username or password is incorrect or the account does not exist'
-     #    else:
-             
-     #         password = request.form['password']
+     
              
                    
              
 
-     #    if request.form['username'] != 'admin' or request.form['password'] != 'pokeDex':
-     #        error = 'The username or password is incorrect'
-     #    else:
-     #        return redirect(url_for('home'))
+     
     return render_template('login.html', error=error)
 
 
