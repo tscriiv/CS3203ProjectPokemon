@@ -14,7 +14,7 @@ from flask_login import login_user, UserMixin, login_required, logout_user, curr
 DB_HOST = 'localhost'
 DB_PORT = '5432'
 DB_USER = 'pokeDex_admin'
-DB_PASSWORD = 'pokeDexv1.0'
+DB_PASSWORD = ''
 DB_NAME = 'poke_dex'
 
 def connect_to_db():
