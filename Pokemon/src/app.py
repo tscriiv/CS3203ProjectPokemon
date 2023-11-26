@@ -11,10 +11,10 @@ from flask_login import login_user, UserMixin, login_required, logout_user, curr
 ##POSTGRESSQL connection
 # use 'localhost' when running within IDE
 # use 'pokemon-db-1' when running within Docker
-DB_HOST = 'localhost'
+DB_HOST = 'pokemon-db-1'
 DB_PORT = '5432'
 DB_USER = 'pokeDex_admin'
-DB_PASSWORD = ''
+DB_PASSWORD = 'pokeDexv1.0'
 DB_NAME = 'poke_dex'
 
 def connect_to_db():
@@ -132,6 +132,8 @@ def validate_user_credentials(username, password):
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+     if request.method == 'GET':
+          return render_template('login.html')
      error = None
      if request.method == 'POST':
           username = request.form.get('username')
@@ -150,7 +152,6 @@ def login():
 #home page, will show the list of pokemon 
 @app.route('/')
 @app.route('/home')
-@login_required
 def home():
 
      backgroundColors = {}
@@ -178,6 +179,7 @@ def home():
      req = requests.get(url).json()
      
      pokemonList = []
+     rosterList = None
      index = 1
      for r in req['results']:
           url2 = 'https://pokeapi.co/api/v2/pokemon/' + r['name']
@@ -185,7 +187,8 @@ def home():
           pokemonList.append(req2)
 
      #grab roster from db
-     rosterList = get_roster_list(current_user.id)
+     if flask_login.current_user.is_authenticated == True:
+          rosterList = get_roster_list(current_user.id)
      
      context = {
           "pokemonList": pokemonList,
@@ -232,6 +235,51 @@ def get_roster_list(user_id):
 def logout():
      logout_user()
      return redirect(url_for('login'))
+
+@app.route('/createaccount', methods = ['GET','POST'])
+def createaccount():
+     if request.method == 'GET':
+          return render_template('createaccount.html')
+     if request.method == 'POST':
+          error = None
+          new_username = request.form.get('username')
+          new_password = request.form.get('password')
+
+          ##parse users to make sure that username is not taken 
+          connection = connect_to_db()
+          if connection is None:
+               return "Error connecting to database"
+          try:
+               cursor = connection.cursor()
+               cursor.execute("SELECT username FROM users WHERE username = '" + new_username + "'") 
+               
+               if cursor.fetchone():
+                    error = 'That username is already taken!'
+                    return render_template('createaccount.html',error = error)
+               
+               # if there is no match, add the user and log them in 
+               else:
+                    cursor.execute("INSERT INTO users (username, password) VALUES (%s, %s);",(new_username,new_password))
+                    connection.commit()
+                    cursor.close()
+                    #create user data, redirect to home
+                    user = validate_user_credentials(new_username,new_password)
+                    if user:
+                         login_user(user)
+                         return redirect(url_for('home'))
+                    else:
+                         error = 'Error during account creation. Please try again.'
+          except psycopg2.Error as e:
+               print("Error validating user from the database")
+               print(e)
+          finally:
+               cursor.close()
+               connection.close()
+
+     
+
+
+     return render_template('createaccount.html',Error= error)
 
 if __name__ == '__main__':
      app.run(host='0.0.0.0', port=5200, debug=True)

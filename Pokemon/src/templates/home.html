@@ -11,28 +11,33 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   <title>Pokemon Home</title>
 </head>
-
+<style>
+  body {
+    background-color: #78C850;
+  }
+</style>
 <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="/">PokeDex</a>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+        {% if current_user.is_authenticated %}
+        <li class="nav-item">
+          <span class="navbar-text">Welcome, {{ current_user.username }}!</span>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  <br>
   <div class="container">
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-      <a class="navbar-brand" href="/">PokeDex</a>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <span class="navbar-text">Welcome, {{ current_user.username }}!</span>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
-          </li>
-          {% else %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-          </li>
-          {% endif %}
-        </ul>
-      </div>
-    </nav>
     <div>
       <!-- Nav pills -->
       <ul class="nav nav-pills">
@@ -59,6 +64,7 @@
                     </thead>
                     <tbody>
                       <tr>
+                        <td colspan="2"><a><img width="20px" height="20px" src="{{url_for('static', filename='plus-circle-1427-svgrepo-com.svg')}}"></a></td>
                         <td colspan="3"><strong>{{pokemon.name.capitalize()}}</strong></td>
                         <td colspan="3" style="text-align: right;">
                           {% for t in pokemon.types: %}
@@ -87,6 +93,7 @@
                         {{a.ability.name.capitalize()}}<br>
                         {% endfor %}</td>
                       </tr>
+                      
                     </tbody>
                   </table>
                 </div>
@@ -99,6 +106,7 @@
         </div>
         <!-- Tab 2 -->
         <div class="tab-pane container fade" id="roster">
+          {% if rosterList %}
           <div class="row">
             {% for pokemon in rosterList %}
             <div class="col-sm-3">
@@ -146,7 +154,9 @@
 
             {% endfor %}
           </div>
+          {% else %}
 
+          {% endif %}
         </div>
       </div>
     </div>
