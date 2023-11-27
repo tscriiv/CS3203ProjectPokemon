@@ -151,8 +151,15 @@ def login():
 
 #home page, will show the list of pokemon 
 @app.route('/')
-@app.route('/home')
+@app.route('/home',methods = ['GET','POST'])
 def home():
+     #get list of pokemon names (limit to 250)
+     url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=151'
+     req = requests.get(url).json()
+          
+     pokemonList = []
+     rosterList = None
+     index = 1
 
      backgroundColors = {}
      backgroundColors["grass"] = "#AFE1AF"
@@ -174,29 +181,84 @@ def home():
      backgroundColors["rock"] = "#E89020"
      backgroundColors["ghost"] = "#8A2BE2"
 
-     #get list of pokemon names (limit to 250)
-     url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=151'
-     req = requests.get(url).json()
-     
-     pokemonList = []
-     rosterList = None
-     index = 1
+     add_pokemon = []
      for r in req['results']:
-          url2 = 'https://pokeapi.co/api/v2/pokemon/' + r['name']
-          req2 = requests.get(url2).json()
-          pokemonList.append(req2)
+               url2 = 'https://pokeapi.co/api/v2/pokemon/' + r['name']
+               req2 = requests.get(url2).json()
+               pokemonList.append(req2)
 
      #grab roster from db
      if flask_login.current_user.is_authenticated == True:
           rosterList = get_roster_list(current_user.id)
-     
+          
      context = {
           "pokemonList": pokemonList,
           "rosterList": rosterList,
           "index" : index
-     }
+     } 
+
+     if request.method == 'GET':
+          return render_template('home.html',**context, bgColors=backgroundColors)
      
-     return render_template('home.html',**context, bgColors=backgroundColors)
+     if request.method == 'POST':
+          add_pokemon = request.form.getlist('add',type=str)
+          
+          delete_pokemon = request.form.getlist('delete',type=str)
+          if add_pokemon:
+                    for i in add_pokemon:
+               
+
+                         connection = connect_to_db()
+                         if connection is None:
+                              return "Error connecting to the database"
+                         
+                         try:
+                              
+                              # Create a cursor to interact with the database
+                              cursor = connection.cursor()
+                              cursor.execute("INSERT INTO rosters (user_id,pokemon_url) values (%s,%s)",(current_user.id,'https://pokeapi.co/api/v2/pokemon/' + i))
+                              connection.commit()
+                              cursor.close()
+                         except psycopg2.Error as e:
+                              print("Error validating user from the database")
+                              print(e)
+                         finally:
+                              cursor.close()
+                              connection.close()
+               
+
+          if delete_pokemon:
+               for i in delete_pokemon:
+                    connection = connect_to_db()
+                    if connection is None:
+                              return "Error connecting to the database"
+                         
+                    try:
+                              
+                              # Create a cursor to interact with the database
+                              cursor = connection.cursor()
+                              
+                              cursor.execute("DELETE FROM rosters WHERE pokemon_url = %s and user_id = %s",('https://pokeapi.co/api/v2/pokemon/' + i,current_user.id))
+                              connection.commit()
+                              cursor.close()
+                    except psycopg2.Error as e:
+                              print("Error validating user from the database")
+                              print(e)
+                    finally:
+                              cursor.close()
+                              connection.close()
+
+          if flask_login.current_user.is_authenticated == True:
+               rosterList = get_roster_list(current_user.id)     
+          
+          context = {
+               "pokemonList": pokemonList,
+               "rosterList": rosterList,
+               "index" : index
+          } 
+
+          return render_template('home.html',**context, bgColors=backgroundColors)
+          
 
 def get_roster_list(user_id):
      rosterList = []
@@ -234,7 +296,7 @@ def get_roster_list(user_id):
 @login_required
 def logout():
      logout_user()
-     return redirect(url_for('login'))
+     return redirect(url_for('home'))
 
 @app.route('/createaccount', methods = ['GET','POST'])
 def createaccount():

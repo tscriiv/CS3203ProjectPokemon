@@ -18,7 +18,8 @@
 </style>
 <body>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="/">PokeDex</a>
+    <br>
+    <a class="navbar-brand" href="/">  PokeDex</a>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
         {% if current_user.is_authenticated %}
@@ -31,6 +32,9 @@
         {% else %}
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('createaccount') }}">Sign Up</a>
         </li>
         {% endif %}
       </ul>
@@ -50,6 +54,7 @@
       </ul>
 
       <!-- Tab panes -->
+      <form method="post">
       <div class="tab-content">
         <!-- Tab 1 -->
         <div class="tab-pane container active" id="all">
@@ -59,12 +64,95 @@
               <div class="card"
                 style="width: 19rem; margin: 10px; padding: 10px; background-color: #FFD700; height: 320px; margin: 10px;">
                 <div style="background-color: {{bgColors[pokemon.types[0].type.name]}}; height: 100%;">
+                  
+                    <table class="table table-striped card-body">
+                      <thead>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          {% if current_user.is_authenticated %}
+                          <td colspan="2">
+                            <button style="border:none;background-color:transparent;"   type="submit" name="add" value="{{pokemon.name}}"><img  width="20px" height="20px" src="{{url_for('static', filename='plus-circle-1427-svgrepo-com.svg')}}" alt="add"></button>
+                          </td>
+                          {% else %}
+                          <td colspan="2">
+                            <a href="{{ url_for('login') }}"><img  width="20px" height="20px" src="{{url_for('static', filename='plus-circle-1427-svgrepo-com.svg')}}" alt="add"></a>
+                          </td>
+                          {% endif %}
+                          
+                          <!-- <td colspan="2"><input name="add"  type="image" width="20px" height="20px" src=""></input>
+                          <input type="hidden" name="pokemon" value="{{pokemon.name}}" ></td> -->
+                          <!-- <input type="submit" name="add" value="{{pokemon.name}}" style="background-image: url('static/plus-circle-1427-svgrepo-com.svg'); border:none; background-repeat:no-repeat;background-size:100% 100%;"></td> -->
+                          
+                          
+                          <td colspan="3"><strong>{{pokemon.name.capitalize()}}</strong></td>
+                          <td colspan="3" style="text-align: right;">
+                            {% for t in pokemon.types: %}
+                            {% if t.type.name in bgColors.keys(): %}
+                            <img src="{{url_for('static', filename=t.type.name + '.png')}}" width="20" height="20"
+                              alt="{{t.type.name}} " title="{{t.type.name.capitalize()}}">
+                            {% endif %}
+                            {% endfor %}
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="6" style="text-align: center;"><img
+                              src={{pokemon.sprites.other["official-artwork"].front_default}} alt="No Image Found"
+                              width="110" height="110"></td>
+                        </tr>
+                        <tr>
+                          <td><strong>HP</strong><br>{{pokemon.stats[0].base_stat}}</td>
+                          <td><strong>Att</strong><br>{{pokemon.stats[1].base_stat}}</td>
+                          <td><strong>Def</strong><br>{{pokemon.stats[2].base_stat}}</td>
+                          <td><strong>S.Att</strong><br>{{pokemon.stats[3].base_stat}}</td>
+                          <td><strong>S.Def</strong><br>{{pokemon.stats[4].base_stat}}</td>
+                          <td><strong>Spd</strong><br>{{pokemon.stats[5].base_stat}}</td>
+                        </tr>
+                        <td colspan="6" style="text-align: left;">
+                          {% for a in pokemon.abilities %}
+                          {{a.ability.name.capitalize()}}<br>
+                          {% endfor %}</td>
+                        </tr>
+                        
+                      </tbody>
+                    </table>
+                  
+                  
+                </div>
+              </div>
+            </div>
+
+            {% endfor %}
+          </div>
+
+        </div>
+      
+        <!-- Tab 2 -->
+        {% if current_user.is_authenticated %}
+        <div class="tab-pane container fade" id="roster">
+          {% if rosterList %}
+          <div class="row">
+            {% for pokemon in rosterList %}
+            <div class="col-sm-3">
+              <div class="card"
+                style="width: 19rem; padding: 10px; background-color: #FFD700; height: 320px; margin: 10px;">
+                <div style="background-color: {{bgColors[pokemon.types[0].type.name]}}; height: 100%;">
                   <table class="table table-striped card-body">
                     <thead>
                     </thead>
                     <tbody>
                       <tr>
-                        <td colspan="2"><a><img width="20px" height="20px" src="{{url_for('static', filename='plus-circle-1427-svgrepo-com.svg')}}"></a></td>
+                        {% if current_user.is_authenticated %}
+                        <td colspan="2">
+                          <button style="border:none;background-color:transparent;"   type="submit" name="delete" value="{{pokemon.name}}"><img  width="20px" height="20px" src="{{url_for('static', filename='minus-circle-svgrepo-com.svg')}}" alt="delete"></button>
+                        </td>
+                        {% else %}
+                        <td colspan="2">
+                          <a href="{{ url_for('login') }}"><img  width="20px" height="20px" src="{{url_for('static', filename='minus-circle-svgrepo-com.svg')}}" alt="add"></a>
+                        </td>
+                        {% endif %}
+
+                        
                         <td colspan="3"><strong>{{pokemon.name.capitalize()}}</strong></td>
                         <td colspan="3" style="text-align: right;">
                           {% for t in pokemon.types: %}
@@ -93,7 +181,6 @@
                         {{a.ability.name.capitalize()}}<br>
                         {% endfor %}</td>
                       </tr>
-                      
                     </tbody>
                   </table>
                 </div>
@@ -101,66 +188,50 @@
             </div>
 
             {% endfor %}
+            {% endif %}
           </div>
+          
 
+  
         </div>
-        <!-- Tab 2 -->
+        
+        {% else %}
         <div class="tab-pane container fade" id="roster">
-          {% if rosterList %}
-          <div class="row">
-            {% for pokemon in rosterList %}
-            <div class="col-sm-3">
-              <div class="card"
-                style="width: 19rem; padding: 10px; background-color: #FFD700; height: 320px; margin: 10px;">
-                <div style="background-color: {{bgColors[pokemon.types[0].type.name]}}; height: 100%;">
-                  <table class="table table-striped card-body">
-                    <thead>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td colspan="2"><a><img width="20px" height="20px" src="{{url_for('static', filename='minus-circle-svgrepo-com.svg')}}"></a></td>
-                        <td colspan="3"><strong>{{pokemon.name.capitalize()}} (2nd Tab)</strong></td>
-                        <td colspan="3" style="text-align: right;">
-                          {% for t in pokemon.types: %}
-                          {% if t.type.name in bgColors.keys(): %}
-                          <img src="{{url_for('static', filename=t.type.name + '.png')}}" width="20" height="20"
-                            alt="{{t.type.name}} " title="{{t.type.name.capitalize()}}">
-                          {% endif %}
-                          {% endfor %}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td colspan="6" style="text-align: center;"><img
-                            src={{pokemon.sprites.other["official-artwork"].front_default}} alt="No Image Found"
-                            width="110" height="110"></td>
-                      </tr>
-                      <tr>
-                        <td><strong>HP</strong><br>{{pokemon.stats[0].base_stat}}</td>
-                        <td><strong>Att</strong><br>{{pokemon.stats[1].base_stat}}</td>
-                        <td><strong>Def</strong><br>{{pokemon.stats[2].base_stat}}</td>
-                        <td><strong>S.Att</strong><br>{{pokemon.stats[3].base_stat}}</td>
-                        <td><strong>S.Def</strong><br>{{pokemon.stats[4].base_stat}}</td>
-                        <td><strong>Spd</strong><br>{{pokemon.stats[5].base_stat}}</td>
-                      </tr>
-                      <td colspan="6" style="text-align: left;">
-                        {% for a in pokemon.abilities %}
-                        {{a.ability.name.capitalize()}}<br>
-                        {% endfor %}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+          <span style="text-align: center;size:400%;">
+            <br>
+            <br>
+            <br>
+            <figure>
+              <blockquote class="blockquote">
+                <p>Me give up? No way!</p>
+              </blockquote>
+              <figcaption class="blockquote-footer">
+                Ash Ketchum
+              </figcaption>
+              </figure>
+              <br>
+              <br>
+
+              <p>
+                To start a roster, please log in and start adding pokemon from the main screen. Once your roster has been started, you can begin deleting pokemon from the roster too.
+                
+
+                Thanks for playing!
+              </p>
+              <br>
+              <br>
+              <br>
+              <div class="d-grid gap-2">
+                <button type="button" class="btn btn-danger"><a style="text-decoration: none;color: black;"   href="{{ url_for('login') }}">Login Here</a></button>
+                <button type="button" class="btn btn-link"><a style="text-decoration: none;color: black;"  href="{{ url_for('createaccount') }}">No account? Sign up here</a></button>
               </div>
-            </div>
-
-            {% endfor %}
-          </div>
-          {% else %}
-
-          {% endif %}
+          </span>
         </div>
+        {% endif %}
       </div>
+      </form>
     </div>
+    
   </div>
 </body>
 
